@@ -1,0 +1,2 @@
+the version of firebase-core to use:
+implementation 'com.google.firebase:firebase-core:16.0.1'
