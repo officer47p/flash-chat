@@ -16,19 +16,30 @@ class _LoginScreenState extends State<LoginScreen> {
   String email;
   String password;
   bool showSpinner = false;
+  String cuUser;
+  bool canGetUser = true;
 
 // ### Just for debugging purpose :D ###
-//  void printUser() async {
-//    final em = (await _auth.currentUser());
-//    if (em != null) {
-//      print(em.email);
-//    } else {
-//      print("no user found");
-//    }
-//  }
+  void printUser() async {
+    final em = (await _auth.currentUser());
+    if (em != null) {
+      print(em.email);
+      setState(() {
+        cuUser = em.email;
+      });
+    } else {
+      print("no user found");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (canGetUser) {
+      printUser();
+      setState(() {
+        canGetUser = false;
+      });
+    } else {}
     return Scaffold(
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -39,6 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              Text("${cuUser != null ? cuUser : "hello"}"),
               Hero(
                 tag: "logo",
                 child: Container(
