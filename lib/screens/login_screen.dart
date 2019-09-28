@@ -1,6 +1,8 @@
 import 'package:flash_chat/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_chat/components/rounded_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = "login";
@@ -9,6 +11,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  String email;
+  String password;
+
+// ### Just for debugging purpose :D ###
+//  void printUser() async {
+//    final em = (await _auth.currentUser());
+//    if (em != null) {
+//      print(em.email);
+//    } else {
+//      print("no user found");
+//    }
+//  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
               textAlign: TextAlign.center,
               onChanged: (value) {
                 //Do something with the user input.
+                email = value;
               },
               decoration:
                   kTextFieldDecoration.copyWith(hintText: "Enter your email"),
@@ -46,6 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
               onChanged: (value) {
                 //Do something with the user input.
+                password = value;
               },
               decoration: kTextFieldDecoration.copyWith(
                   hintText: "Enter your password"),
@@ -56,7 +74,19 @@ class _LoginScreenState extends State<LoginScreen> {
             RoundedButton(
               color: Colors.lightBlueAccent,
               text: "Log In",
-              onPressed: () {},
+              onPressed: () async {
+                try {
+                  final authResult = await _auth.signInWithEmailAndPassword(
+                      email: email, password: password);
+                  if (authResult != null) {
+                    Navigator.pushNamed(context, ChatScreen.id);
+                  } else {
+                    throw "Null Auth Result";
+                  }
+                } catch (err) {
+                  print(err);
+                }
+              },
             ),
           ],
         ),

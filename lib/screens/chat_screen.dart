@@ -20,12 +20,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void getCurrentUser() async {
-    await Future.delayed(Duration(seconds: 3), () {});
     try {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
-        print("from chat ${user.email}");
+        print(user.email);
+        setState(() {});
       }
     } catch (err) {
       print(err);
@@ -39,12 +39,11 @@ class _ChatScreenState extends State<ChatScreen> {
         leading: null,
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                //Implement logout functionality
-              }),
+            icon: Icon(Icons.close),
+            onPressed: () {},
+          ),
         ],
-        title: Text('⚡️Chat'),
+        title: Text('⚡️Chat '),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
