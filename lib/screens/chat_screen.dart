@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math' as math;
 
 class ChatScreen extends StatefulWidget {
   static String id = "chat";
@@ -34,6 +35,24 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+//  void getDocuments() async {
+//    final messages = await _firestore.collection("messages").getDocuments();
+//    for (var message in messages.documents) {
+//      print(message.data);
+//    }
+//  }
+
+  void messagesStream() async {
+//    print("#################      started     #################");
+    await for (var snapshot in _firestore.collection("messages").snapshots()) {
+//      print("#################      got snapshot     ###########################");
+      for (var doc in snapshot.documents) {
+        print(doc.data);
+      }
+    }
+//    print("#################      finished      #################");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,9 +62,9 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             icon: Icon(Icons.close),
             onPressed: () async {
-              //Implement logout functionality
-              await _auth.signOut();
-              Navigator.pop(context);
+              messagesStream();
+//              await _auth.signOut();
+//              Navigator.pop(context);
             },
           ),
         ],
@@ -64,9 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
-//                      controller: TextEditingController(text: message),
                       onChanged: (value) {
-                        //Do something with the user input.
                         message = value;
                       },
                       decoration: kMessageTextFieldDecoration,
@@ -78,8 +95,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       await _firestore
                           .collection("messages")
                           .add({"text": message, "sender": loggedInUser.email});
-//                      message = "";
-//                      setState(() {});
                     },
                     child: Text(
                       'Send',
