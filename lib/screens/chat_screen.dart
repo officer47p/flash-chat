@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:math' as math;
 
 class ChatScreen extends StatefulWidget {
   static String id = "chat";
@@ -42,16 +41,21 @@ class _ChatScreenState extends State<ChatScreen> {
 //    }
 //  }
 
-  void messagesStream() async {
+//  void messagesStream() async {
+//    _firestore.collection("messages").snapshots().listen((data) {
+//      for (var document in data.documents) {
+//        print(document.data);
+//      }
+//    });
 //    print("#################      started     #################");
-    await for (var snapshot in _firestore.collection("messages").snapshots()) {
-//      print("#################      got snapshot     ###########################");
-      for (var doc in snapshot.documents) {
-        print(doc.data);
-      }
-    }
+//    await for (var snapshot in _firestore.collection("messages").snapshots()) {
+////      print("#################      got snapshot     ###########################");
+//      for (var doc in snapshot.documents) {
+//        print(doc.data);
+//      }
+//    }
 //    print("#################      finished      #################");
-  }
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +66,9 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             icon: Icon(Icons.close),
             onPressed: () async {
-              messagesStream();
-//              await _auth.signOut();
-//              Navigator.pop(context);
+//              messagesStream();
+              await _auth.signOut();
+              Navigator.pop(context);
             },
           ),
         ],
@@ -76,6 +80,24 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            StreamBuilder<QuerySnapshot>(
+                stream: _firestore.collection("messages").snapshots(),
+                builder: (context, snapshot) {
+//                  print(snapshot.hasData);
+                  if (snapshot.hasData) {
+                    final messages = snapshot.data.documents;
+                    List<Text> messageWidgets = [];
+                    for (var message in messages) {
+                      messageWidgets.add(Text(
+                          "${message.data["text"]} from ${message.data["sender"]}"));
+                    }
+                    return Column(
+                      children: messageWidgets,
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                }),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
