@@ -86,13 +86,29 @@ class _ChatScreenState extends State<ChatScreen> {
 //                  print(snapshot.hasData);
                   if (snapshot.hasData) {
                     final messages = snapshot.data.documents;
-                    List<Text> messageWidgets = [];
+                    List<Widget> messageWidgets = [];
                     for (var message in messages) {
-                      messageWidgets.add(Text(
-                          "${message.data["text"]} from ${message.data["sender"]}"));
+                      messageWidgets.add(
+                        Container(
+                          color: Colors.lightGreen,
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            color: Colors.red,
+                            child: Text(
+                              "${message.data["text"]} from ${message.data["sender"]}",
+                              style: TextStyle(
+                                  backgroundColor: Colors.lightBlueAccent),
+                            ),
+                          ),
+                        ),
+                      );
                     }
-                    return Column(
-                      children: messageWidgets,
+                    return Expanded(
+                      child: ListView(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                        children: messageWidgets,
+                      ),
                     );
                   } else {
                     return CircularProgressIndicator();
