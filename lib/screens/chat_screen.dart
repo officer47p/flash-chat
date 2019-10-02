@@ -15,6 +15,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Firestore _firestore = Firestore.instance;
   FirebaseUser loggedInUser;
   String message;
+  TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
@@ -81,7 +82,10 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection("messages").snapshots(),
+                stream: _firestore
+                    .collection("messages")
+//                    .orderBy("_timeStampUTC", descending: true)
+                    .snapshots(),
                 builder: (context, snapshot) {
 //                  print(snapshot.hasData);
                   if (snapshot.hasData) {
@@ -89,16 +93,39 @@ class _ChatScreenState extends State<ChatScreen> {
                     List<Widget> messageWidgets = [];
                     for (var message in messages) {
                       messageWidgets.add(
-                        Container(
-                          color: Colors.lightGreen,
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            color: Colors.red,
-                            child: Text(
-                              "${message.data["text"]} from ${message.data["sender"]}",
-                              style: TextStyle(
-                                  backgroundColor: Colors.lightBlueAccent),
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Column(
+                            crossAxisAlignment:
+                                loggedInUser.email == message.data["sender"]
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                " from ${message.data["sender"]}",
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                padding: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(15),
+                                  ),
+                                  color: loggedInUser.email ==
+                                          message.data["sender"]
+                                      ? Colors.lightBlueAccent
+                                      : Colors.grey,
+                                ),
+                                child: Text(
+                                  "${message.data["text"]}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -121,6 +148,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      controller: controller,
                       onChanged: (value) {
                         message = value;
                       },
@@ -130,6 +158,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   FlatButton(
                     onPressed: () async {
                       //Implement send functionality.
+                      controller.clear();
                       await _firestore
                           .collection("messages")
                           .add({"text": message, "sender": loggedInUser.email});
