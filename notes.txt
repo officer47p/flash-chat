@@ -1,2 +1,29 @@
 the version of firebase-core to use:
 implementation 'com.google.firebase:firebase-core:16.0.1'
+
+
+
+
+
+//  void getDocuments() async {
+//    final messages = await _firestore.collection("messages").getDocuments();
+//    for (var message in messages.documents) {
+//      print(message.data);
+//    }
+//  }
+
+//  void messagesStream() async {
+//    _firestore.collection("messages").snapshots().listen((data) {
+//      for (var document in data.documents) {
+//        print(document.data);
+//      }
+//    });
+//    print("#################      started     #################");
+//    await for (var snapshot in _firestore.collection("messages").snapshots()) {
+////      print("#################      got snapshot     ###########################");
+//      for (var doc in snapshot.documents) {
+//        print(doc.data);
+//      }
+//    }
+//    print("#################      finished      #################");
+//  }
