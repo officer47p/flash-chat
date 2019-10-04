@@ -89,9 +89,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   } catch (err) {
                     print("error");
                     print(err);
-                    setState(() {
-                      showSpinner = false;
-                    });
+                    setState(
+                      () {
+                        showSpinner = false;
+                      },
+                    );
                   }
                 },
               ),
