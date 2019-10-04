@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -30,8 +31,8 @@ class MessageBubble extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey,
-                  blurRadius: 3,
-                  offset: Offset.fromDirection(1, 3),
+                  blurRadius: 2,
+                  offset: Offset(0, 2),
                 )
               ],
               borderRadius: BorderRadius.circular(15),
@@ -42,7 +43,9 @@ class MessageBubble extends StatelessWidget {
             padding: EdgeInsets.all(10),
             child: Text(
               text,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                color: Colors.white,
+              ),
             ),
           ),
         ],

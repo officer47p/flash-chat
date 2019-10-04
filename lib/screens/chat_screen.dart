@@ -61,7 +61,10 @@ class _ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             StreamBuilder<QuerySnapshot>(
-                stream: _firestore.collection("messages").snapshots(),
+                stream: _firestore
+                    .collection("messages")
+                    .orderBy("timestamp")
+                    .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     final messages = snapshot.data.documents;
@@ -105,9 +108,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     onPressed: () async {
                       //Implement send functionality.
                       controller.clear();
-                      await _firestore
-                          .collection("messages")
-                          .add({"text": message, "sender": loggedInUser.email});
+                      await _firestore.collection("messages").add({
+                        "text": message,
+                        "sender": loggedInUser.email,
+                        "timestamp": FieldValue.serverTimestamp()
+                      });
                     },
                     child: Text(
                       'Send',
