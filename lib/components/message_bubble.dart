@@ -35,7 +35,17 @@ class MessageBubble extends StatelessWidget {
                   offset: Offset(0, 2),
                 )
               ],
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: sender == loggedInUser.email
+                  ? BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
+                    )
+                  : BorderRadius.only(
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
+                    ),
               color: sender == loggedInUser.email
                   ? Colors.lightBlueAccent
                   : Colors.grey,
