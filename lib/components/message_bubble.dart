@@ -28,6 +28,9 @@ class MessageBubble extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
+              color: sender == loggedInUser.email
+                  ? Colors.lightBlueAccent
+                  : Colors.white,
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey,
@@ -46,15 +49,14 @@ class MessageBubble extends StatelessWidget {
                       bottomLeft: Radius.circular(15),
                       bottomRight: Radius.circular(15),
                     ),
-              color: sender == loggedInUser.email
-                  ? Colors.lightBlueAccent
-                  : Colors.grey,
             ),
             padding: EdgeInsets.all(10),
             child: Text(
               text,
               style: TextStyle(
-                color: Colors.white,
+                color: sender == loggedInUser.email
+                    ? Colors.white
+                    : Colors.black87,
               ),
             ),
           ),
